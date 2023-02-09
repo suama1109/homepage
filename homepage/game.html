@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hit and Blow</title>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            text-align: center;
+            background-image: url("b059.jpg");
+        }
+
+        .btn {
+            width: 58px;
+            height: 50px;
+            font-size: 25px;
+        }
+
+        .bigbtn {
+            width: 125px;
+            height: 50px;
+            font-size: 25px;
+        }
+
+        .numbox {
+            width: 50px;
+            height: 50px;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .msg {
+            width: 500px;
+            height: 50px;
+            font-size: 32px;
+            text-align: center;
+        }
+
+        t {
+            font-size: 54px;
+            color: blueviolet;
+        }
+
+        st {
+            font-size: 24px;
+            color: blueviolet;
+        }
+    </style>
+    <script>
+        // 配列に0-9の数字を入れる
+        var array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        var ans = [0, 0, 0, 0];
+
+        // 判定の引数
+        gHit = 0;
+        gBlow = 0;
+        gTry = 0;
+        // ずる防止用のフラグ
+        gFlg = 0;
+
+        // 配列シャッフル
+        function shuffle(array) {
+            for (let i = (array.length - 1); 0 < i; i--) {
+                let r = Math.floor(Math.random() * (i + 1));
+                let tmp = array[i];
+                array[i] = array[r];
+                array[r] = tmp;
+            }
+            return array;
+        }
+
+        function flg() {
+            if (gFlg == 1) {
+                init();
+            }
+        }
+        //初期化
+        function init() {
+            array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            array = shuffle(array);
+
+            ans = [0, 0, 0, 0];
+
+            document.getElementById("thousand").value = 0;
+            document.getElementById("hundred").value = 0;
+            document.getElementById("ten").value = 0;
+            document.getElementById("one").value = 0;
+
+            document.getElementById("hit").value = 0;
+            document.getElementById("blow").value = 0;
+            document.getElementById("try").value = 0;
+
+            document.getElementById("msgbox").value = " ";
+
+            gHit = 0;
+            gBlow = 0;
+            gTry = 0;
+
+            gFlg = 0;
+        }
+
+        // スピンボタン用(9から0、0から9)
+        function spin(num) {
+            if (num >= 10) {
+                return 0;
+            } else if (num < 0) {
+                return 9;
+            } else {
+                return num;
+            }
+        }
+
+        // スピンボタンのプラス方向
+        function pushAdd(num) {
+            num1 = 0
+            switch (num) {
+                case 1:
+                    num1 = Number(document.getElementById("thousand").value) + 1;
+                    num1 = spin(num1);
+                    document.getElementById("thousand").value = num1;
+                    break;
+                case 2:
+                    num1 = Number(document.getElementById("hundred").value) + 1;
+                    num1 = spin(num1);
+                    document.getElementById("hundred").value = num1;
+                    break;
+                case 3:
+                    num1 = Number(document.getElementById("ten").value) + 1;
+                    num1 = spin(num1);
+                    document.getElementById("ten").value = num1;
+                    break;
+                case 4:
+                    num1 = Number(document.getElementById("one").value) + 1;
+                    num1 = spin(num1);
+                    document.getElementById("one").value = num1;
+                    break;
+            }
+            num1 = 0;
+            flg();
+        }
+
+        // スピンボタンマイナス方向
+        function pushRed(num) {
+            num1 = 0
+            switch (num) {
+                case 1:
+                    num1 = Number(document.getElementById("thousand").value) - 1;
+                    num1 = spin(num1);
+                    document.getElementById("thousand").value = num1;
+                    break;
+                case 2:
+                    num1 = Number(document.getElementById("hundred").value) - 1;
+                    num1 = spin(num1);
+                    document.getElementById("hundred").value = num1;
+                    break;
+                case 3:
+                    num1 = Number(document.getElementById("ten").value) - 1;
+                    num1 = spin(num1);
+                    document.getElementById("ten").value = num1;
+                    break;
+                case 4:
+                    num1 = Number(document.getElementById("one").value) - 1;
+                    num1 = spin(num1);
+                    document.getElementById("one").value = num1;
+                    break;
+            }
+            num1 = 0;
+            flg();
+        }
+
+        // 解答表示
+        function pushAnswer() {
+            document.getElementById("thousand").value = array[0];
+            document.getElementById("hundred").value = array[1];
+            document.getElementById("ten").value = array[2];
+            document.getElementById("one").value = array[3];
+            document.getElementById("msgbox").value = "今回の答えはこちら！";
+            //gFlg = 1;
+        }
+
+        // 入力した数値をリセット
+        function pushReset() {
+            document.getElementById("thousand").value = 0;
+            document.getElementById("hundred").value = 0;
+            document.getElementById("ten").value = 0;
+            document.getElementById("one").value = 0;
+            flg();
+        }
+
+        // 解答送信、正誤判定
+        function pushChallenge() {
+            document.getElementById("hit").value = 0;
+            document.getElementById("blow").value = 0;
+            ans[0] = document.getElementById("thousand").value;
+            ans[1] = document.getElementById("hundred").value;
+            ans[2] = document.getElementById("ten").value;
+            ans[3] = document.getElementById("one").value;
+            gTry += 1;
+            tmphit = 0;
+            tmpblow = 0;
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < ans.length; j++) {
+                    if (array[i] == ans[j] && i == j) {
+                        tmphit = 1;
+                        tmpblow = 0;
+                    } else if (array[i] == ans[j] && tmphit != 1) {
+                        tmpblow = 1;
+                    }
+                }
+                gHit += tmphit;
+                gBlow += tmpblow;
+                tmphit = 0;
+                tmpblow = 0;
+            }
+
+
+            document.getElementById("hit").value = gHit;
+            document.getElementById("blow").value = gBlow;
+            document.getElementById("try").value = gTry;
+            if(gHit == 4){
+                document.getElementById("msgbox").value = "すごい！クリアですおめでとう！";
+            }else{
+                document.getElementById("msgbox").value = "残念・・・頑張って！";
+            }
+            gHit = 0;
+            gBlow = 0;
+            flg();
+        }
+
+        window.onload = function () {
+            init();
+        }
+
+    </script>
+</head>
+
+<body>
+    <t>Hit and Blow!!!</t>
+    <br>
+    <st>Hit </st> <input class="numbox" id="hit" type="text" value="0">
+    <st>Blow </st> <input class="numbox" id="blow" type="text" value="0">
+    <st>Try </st> <input class="numbox" id="try" type="text" value="0">
+    <br>
+    <br>
+    <input class="btn" type="button" value="↑" onclick="pushAdd(1)">
+    <input class="btn" type="button" value="↑" onclick="pushAdd(2)">
+    <input class="btn" type="button" value="↑" onclick="pushAdd(3)">
+    <input class="btn" type="button" value="↑" onclick="pushAdd(4)">
+    <br>
+    <input class="numbox" id="thousand" type="text" value="0">
+    <input class="numbox" id="hundred" type="text" value="0">
+    <input class="numbox" id="ten" type="text" value="0">
+    <input class="numbox" id="one" type="text" value="0">
+    <br>
+    <input class="btn" type="button" value="↓" onclick="pushRed(1)">
+    <input class="btn" type="button" value="↓" onclick="pushRed(2)">
+    <input class="btn" type="button" value="↓" onclick="pushRed(3)">
+    <input class="btn" type="button" value="↓" onclick="pushRed(4)">
+    <br>
+    <br>
+    <input class="bigbtn" type="button" value="Challenge" onclick="pushChallenge()">
+    <input class="bigbtn" type="button" value="Reset" onclick="pushReset()">
+    <br>
+    <br>
+    <input class="bigbtn" type="button" value="Restart" onclick="init()">
+    <input class="bigbtn" type="button" value="Answer" onclick="pushAnswer()">
+    <br><br>
+    <input class="msg" id="msgbox" type="text" value="">
+    <br>
+    <br>
+    <st>
+        <center>☆ルール説明☆</center>
+        <br>4桁の数字（重複なし）を当てよう！
+        <br>Hitは桁数と数字が正解している数
+        <br>Blowは数字は含まれているけど桁が違っている数
+        <br>Tryは試行回数
+        <br>なるべく少ない試行回数でクリアしよう！
+    </st>
+</body>
+
+</html>

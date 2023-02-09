@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ボタンを押すと音が出るよ！</title>
+    <script>
+        function somebody() {
+            let music = new Audio("251[kb]somebody-scream.wav.mp3");
+            music.play();
+        }
+    </script>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+            text-align: center;
+            background-image: url("b059.jpg");
+        }
+        .play {
+            width: 350px;
+            height: 50px;
+            font-size: 25px;
+        }
+    </style>
+</head>
+<body>
+    <br>
+    <input class="play" type="button" value="三倍アイスクリーム！！！" onclick="somebody()">
+</body>
+</html>
